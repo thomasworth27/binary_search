@@ -13,6 +13,16 @@ Pay very close attention to your list indexes and your < vs <= operators.
 '''
 
 
+def _first_positive(xs, lo, hi):
+    # first index in [lo, hi) with xs[i] > 0, or hi if none
+    if lo >= hi:
+        return lo
+    mid = (lo + hi) // 2
+    if xs[mid] > 0:
+        return _first_positive(xs, lo, mid)
+    return _first_positive(xs, mid + 1, hi)
+
+
 def find_smallest_positive(xs):
     '''
     Assume that xs is a list of numbers sorted from LOWEST to HIGHEST.
@@ -30,7 +40,8 @@ def find_smallest_positive(xs):
     >>> find_smallest_positive([-3, -2, -1]) is None
     True
     '''
-
+    i = _first_positive(xs, 0, len(xs))
+    return i if i < len(xs) else None
 
 def find_largest_negative(xs, lo=0, hi=None):
     '''
@@ -50,7 +61,15 @@ def find_largest_negative(xs, lo=0, hi=None):
     >>> find_largest_negative([-3, -2, -1])
     2
     '''
-
+     if hi is None:
+        hi = len(xs)
+    if lo >= hi:
+        return None
+    mid = (lo + hi) // 2
+    if xs[mid] < 0:
+        r = find_largest_negative(xs, mid + 1, hi)
+        return mid if r is None else r
+    return find_largest_negative(xs, lo, mid)
 
 def find_smallest(xs, lo=0, hi=None):
     '''
@@ -73,6 +92,36 @@ def find_smallest(xs, lo=0, hi=None):
     >>> find_smallest([]) is None
     True
     '''
+ if hi is None:
+        hi = len(xs)
+    if lo >= hi:
+        return None
+    if hi - lo == 1:
+        return lo
+    mid = (lo + hi - 1) // 2
+    if xs[mid] < xs[mid + 1]:
+        return find_smallest(xs, lo, mid + 1)
+    return find_smallest(xs, mid + 1, hi)
+
+
+def _first_at_or_below(xs, x, lo, hi):
+    # first index in [lo, hi) with xs[i] <= x, or hi if none (xs is descending)
+    if lo >= hi:
+        return lo
+    mid = (lo + hi) // 2
+    if xs[mid] <= x:
+        return _first_at_or_below(xs, x, lo, mid)
+    return _first_at_or_below(xs, x, mid + 1, hi)
+
+
+def _first_below(xs, x, lo, hi):
+    # first index in [lo, hi) with xs[i] < x, or hi if none (xs is descending)
+    if lo >= hi:
+        return lo
+    mid = (lo + hi) // 2
+    if xs[mid] < x:
+        return _first_below(xs, x, lo, mid)
+    return _first_below(xs, x, mid + 1, hi)
 
 
 def count_repeats(xs, x):
@@ -96,3 +145,4 @@ def count_repeats(xs, x):
     >>> count_repeats([3, 2, 1], 4)
     0
     '''
+    return _first_below(xs, x, 0, len(xs)) - _first_at_or_below(xs, x, 0, len(xs))
