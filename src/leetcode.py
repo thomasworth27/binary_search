@@ -61,7 +61,7 @@ def find_largest_negative(xs, lo=0, hi=None):
     >>> find_largest_negative([-3, -2, -1])
     2
     '''
-     if hi is None:
+    if hi is None:
         hi = len(xs)
     if lo >= hi:
         return None
