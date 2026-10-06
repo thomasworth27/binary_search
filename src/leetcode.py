@@ -43,6 +43,7 @@ def find_smallest_positive(xs):
     i = _first_positive(xs, 0, len(xs))
     return i if i < len(xs) else None
 
+
 def find_largest_negative(xs, lo=0, hi=None):
     '''
     Assume that xs is a list of numbers sorted from LOWEST to HIGHEST.
@@ -71,6 +72,7 @@ def find_largest_negative(xs, lo=0, hi=None):
         return mid if r is None else r
     return find_largest_negative(xs, lo, mid)
 
+
 def find_smallest(xs, lo=0, hi=None):
     '''
     Assume that xs is a list of numbers that is strictly decreasing
@@ -92,7 +94,7 @@ def find_smallest(xs, lo=0, hi=None):
     >>> find_smallest([]) is None
     True
     '''
- if hi is None:
+    if hi is None:
         hi = len(xs)
     if lo >= hi:
         return None
